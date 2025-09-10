@@ -1,8 +1,21 @@
 ﻿using FightingGame;
-Enemy e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, name="Bob"};
-Enemy e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, name = "David" };
-Enemy e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, name = "John" };
-int playerLevel = 1;
+Character e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, name="Bob"};
+Character e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, name = "David"};
+Character e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, name = "John"};
+Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, name = "" };
+List<Character> list = [e1, e2, e3]; 
+static string Keytest()
+{
+    string a = "0";
+    while (a == "0")
+    {
+        if (Console.KeyAvailable)
+        {
+            a = Console.ReadKey(true).KeyChar.ToString();
+        }
+    }
+    return a;
+}
 static void Print(string a, int time)
 {
     for (int i = 0; i < a.Length; i++)
@@ -19,51 +32,120 @@ static void Print(string a, int time)
     }
     Console.Write("\n\n");
 }
-static int Attack(int minHit, int maxHit, int hitChance)
+static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int StatPoints, string StatName)
 {
-    if (Random.Shared.Next(1, 100) <= hitChance)
+    Print($"Do you want to increase {StatName}? +{IncreaseAmount} = {Cost} statpoint(s),you have {StatPoints} statpoints.\nYou have a {StatName} of {BaseStat}\n1. Increase {StatName}.\n2. Cancel", 1000);
+    string confirm = Keytest();
+    if (confirm == "1" && StatPoints >= Cost)
     {
-        return Random.Shared.Next(minHit, maxHit+1);
+        Print($"Increased {StatName} by {IncreaseAmount}", 200);
+        return (IncreaseAmount, Cost);
     }
-    else
+    else if (confirm == "1" && StatPoints < Cost)
     {
-        return 0;
+        Print("Not enough statpoints.", 100);
+        return (0, 0);
     }
+    else return (0, 0);
 }
-int enemyHitChance = 50;
-int playerMinHit = 1 ;
-int enemyMinHit = 1;
-int enemyMaxHit = 6;
+bool statsDone = false;
+int statpoints = 10;
 Print("What is your name?", 30);
-string playerName = Console.ReadLine();
-while (true)
+p1.name= Console.ReadLine();
+bool playing = true;
+while (playing)
 {
-int enemyHP = 20;
-int playerHP = 20+3*(playerLevel-1);
-int playerMaxHit = 6+(playerLevel-1);
-int playerHitChance = 50+5*(playerLevel-1);
-    List<string> EnemyNames = ["Bob", "David", "Dumstrut"];
-    string enemyName = EnemyNames[Random.Shared.Next(0, 3)];
+Character e = list[Random.Shared.Next(list.Count)];
+Print($"Your enemy is {e.name}", 200);
+    while (statsDone == false)
+    {
+        Print("What stat do you want to increase?\n1. Mininum Hit\n2. Maximum Hit\n3. Max HP\n4. Hit Chance\n5. Skip stat boosts", 500);
+        string key = Keytest();
+        List<string> keylist = ["1", "2", "3", "4", "5"];
+        if (key == "1")
+            {
+                (int a, int b) = StatChange(2, p1.minHit, 1, statpoints, "minimum hit");
+                p1.minHit += a;
+                statpoints -= b;
+            }
+        if (key == "2")
+            {
+                (int a, int b) = StatChange(2, p1.maxHit, 1, statpoints, "maximum hit");
+                p1.maxHit += a;
+                statpoints -= b;
+            }
+        if (key == "3")
+            {
+                (int a, int b) = StatChange(1, p1.HP, 4, statpoints, "maximum HP");
+                p1.HP += a;
+                statpoints -= b;
+            }
+        if (key == "4")
+            {
+                (int a, int b) = StatChange(1, p1.hitChance, 3, statpoints, "hit chance");
+                p1.hitChance += a;
+                statpoints -= b;
+            }
+        if (key == "5" || statpoints == 0)
+        {
+            statsDone = true;
+        }
+    }
+    int enemyHP = e.HP;
+    int playerHP = p1.HP;
     while (playerHP > 0 && enemyHP > 0)
     {
-        enemyHP -= Attack(playerMinHit, playerMaxHit, playerHitChance);
-        playerHP -= Attack(enemyMinHit, enemyMaxHit, enemyHitChance);
-        Print($"{enemyName}'s HP is {enemyHP}", 150);
-        Print($"{playerName}'s HP is {playerHP}", 150);
-        Console.ReadLine();
+        Print("What do you do?\n1. Normal attack\n2. Heavy attack",150);
+        string combatChoice="";
+        while (combatChoice != "1" && combatChoice != "2")
+            combatChoice = Keytest();
+        {
+            if (combatChoice == "1")
+            {
+                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance);
+                if (dmg != 0)
+                {
+                    Print($"You dealt {dmg} damage to {e.name}.", 250);
+                    enemyHP -= dmg;
+                }
+                else
+                {
+                    Print($"You missed your normal attack on {e.name}", 250);
+                }
+            }
+            else if (combatChoice == "2")
+            {
+                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance);
+                enemyHP -= dmg;
+                if (dmg != 0)
+                {
+                    Print($"You dealt {dmg} damage to {e.name} using the heavy attack!", 250);
+                }
+                else
+                {
+                    Print($"You missed your heavy attack on {e.name}", 250);
+                }
+            }
+        }
+        int enemyDMG = e.Attack(e.minHit,e.maxHit,e.hitChance);
+        playerHP -= enemyDMG;
+        Print($"{e.name} dealt {enemyDMG} damage to you", 100);
+        Print($"{e.name}'s HP is {enemyHP}", 150);
+        Print($"{p1.name}'s HP is {playerHP}", 150);
     }
     if (enemyHP <= 0 && playerHP >= 0)
     {
-        Print($"You, {playerName}, won!", 300);
-        playerLevel += 1;
+        Print($"You, {p1.name}, won!", 300);
     }
     else if (enemyHP >= 0 && playerHP <= 0)
     {
-        Print($"The enemy, {enemyName}, won!", 300);
+        Print($"The enemy, {e.name}, won!", 300);
     }
     else
     {
         Print("It's a draw!", 300);
     }
-    Console.ReadLine();
+    Print("Play again?\n1. Yes\n2. No", 300);
+    if (Keytest() != "1")
+    { playing = false; }
 }

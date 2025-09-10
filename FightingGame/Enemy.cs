@@ -1,24 +1,29 @@
 using System;
-
 namespace FightingGame;
 
-public class Enemy
+public class Character
 {
     public int HP;
     public int minHit;
     public int maxHit;
     public int hitChance;
     public string name;
-    public int Attack(int maxHit, int minHit, int hitChance)
+    public int Attack(int minHit, int maxHit, int hitChance)
     {
         if (Random.Shared.Next(1, 100) <= hitChance)
+        {
+            return Random.Shared.Next(minHit, maxHit + 1);
+        }
+        else
+        {return 0;}
+    }
+    public int HeavyAttack(int minHit, int maxHit, int hitChance)
     {
-        return Random.Shared.Next(minHit, maxHit+1);
+        if (Random.Shared.Next(1, 100) <= hitChance / 2)
+        {
+            return Random.Shared.Next(minHit, maxHit + 1) * 2;
+        }
+        else{ return 0; }
     }
-    else
-    {
-        return 0;
-    }
-
-    }
+    
 }
