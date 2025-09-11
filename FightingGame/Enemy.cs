@@ -7,6 +7,7 @@ public class Character
     public int minHit;
     public int maxHit;
     public int hitChance;
+    public int critChance;
     public string name;
     public int Attack(int minHit, int maxHit, int hitChance)
     {
@@ -15,7 +16,9 @@ public class Character
             return Random.Shared.Next(minHit, maxHit + 1);
         }
         else
-        {return 0;}
+        {
+            return 0;
+        }
     }
     public int HeavyAttack(int minHit, int maxHit, int hitChance)
     {
@@ -23,7 +26,10 @@ public class Character
         {
             return Random.Shared.Next(minHit, maxHit + 1) * 2;
         }
-        else{ return 0; }
+        else
+        {
+            return 0;
+        }
     }
     
 }
