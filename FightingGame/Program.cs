@@ -1,8 +1,8 @@
 ﻿using FightingGame;
-Character e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, critChance=0, name="Bob"};
-Character e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, critChance=0, name = "David"};
-Character e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=10, name = "John"};
-Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=0,name = "" };
+Character e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, critChance=0, heavyAttackChance=20,critMult=2 , name="Bob"};
+Character e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, critChance=0, heavyAttackChance=20,critMult=2 , name = "David"};
+Character e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=10, heavyAttackChance=20,critMult=2 , name = "John"};
+Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=0, heavyAttackChance=20,critMult=2 , name = "" };
 List<Character> list = [e1, e2, e3]; 
 static string Keytest()
 {
@@ -34,9 +34,9 @@ static void Print(string a, int time)
 }
 static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int StatPoints, string StatName)
 {
-    Print($"Do you want to increase {StatName}? +{IncreaseAmount} = {Cost} statpoint(s),you have {StatPoints} statpoints.\nYou have a {StatName} of {BaseStat}\n1. Increase {StatName}.\n2. Cancel", 1000);
+    Print($"Do you want to increase {StatName}? +{IncreaseAmount} = {Cost} statpoint(s),you have {StatPoints} statpoints.\nYou have a {StatName} of {BaseStat}\n1. Increase {StatName}.\n2. Increase 5 times\n3. Use all stat points\n4. Cancel", 1000);
     string confirm = "";
-    List<string> confirmlist = ["1", "2"];
+    List<string> confirmlist = ["1", "2","3","4"];
     while (confirmlist.Contains(confirm) == false)
     {
         confirm = Keytest();
@@ -45,10 +45,21 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
             Print($"Increased {StatName} by {IncreaseAmount}", 200);
             return (IncreaseAmount, Cost);
         }
-        else if (confirm == "1" && StatPoints < Cost)
+        else if (confirm == "1" && StatPoints < Cost || confirm == "2" && StatPoints < Cost * 5)
         {
             Print("Not enough statpoints.", 100);
             return (0, 0);
+        }
+        else if (confirm == "2" && StatPoints >= 5 * Cost)
+        {
+            Print($"Increased {StatName} by {IncreaseAmount * 5}", 200);
+            return (IncreaseAmount * 5, Cost * 5);
+        }
+        else if (confirm == "3")
+        {
+            int buyCount = StatPoints / Cost;
+            Print($"Increased {StatName} by {buyCount * IncreaseAmount}", 200);
+            return (IncreaseAmount * buyCount, Cost*buyCount);
         }
     }
     return (0, 0);
@@ -59,7 +70,7 @@ Print("What is your name?", 30);
 p1.name= Console.ReadLine();
 bool playing = true;
 while (playing)
-{
+{   
 Character e = list[Random.Shared.Next(list.Count)];
 Print($"Your enemy is {e.name}", 200);
     while (statsDone == false)
@@ -117,7 +128,7 @@ Print($"Your enemy is {e.name}", 200);
         combatChoice = Keytest();
             if (combatChoice == "1")
             {
-                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance);
+                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance,p1.critChance);
                 if (dmg != 0)
                 {
                     Print($"You dealt {dmg} damage to {e.name}.", 250);
@@ -130,7 +141,7 @@ Print($"Your enemy is {e.name}", 200);
             }
             else if (combatChoice == "2")
             {
-                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance);
+                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance,p1.critChance);
                 enemyHP -= dmg;
                 if (dmg != 0)
                 {
@@ -142,7 +153,7 @@ Print($"Your enemy is {e.name}", 200);
                 }
             }
         }
-        int enemyDMG = e.Attack(e.minHit,e.maxHit,e.hitChance);
+        int enemyDMG = e.Attack(e.minHit,e.maxHit,e.hitChance,e.critChance);
         playerHP -= enemyDMG;
         Print($"{e.name} dealt {enemyDMG} damage to you", 100);
         Print($"{e.name}'s HP is {enemyHP}", 150);

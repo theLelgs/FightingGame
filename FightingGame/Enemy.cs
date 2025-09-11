@@ -8,28 +8,43 @@ public class Character
     public int maxHit;
     public int hitChance;
     public int critChance;
+    public int heavyAttackChance;
+    public int critMult;
     public string name;
-    public int Attack(int minHit, int maxHit, int hitChance)
+    public int Attack(int minHit, int maxHit, int hitChance, int critChance)
     {
-        if (Random.Shared.Next(1, 100) <= hitChance)
+        int random = Random.Shared.Next(1, 100);
+        if (random <= hitChance)
         {
-            return Random.Shared.Next(minHit, maxHit + 1);
+            Console.WriteLine(random);
+            return Random.Shared.Next(minHit, maxHit + 1) * CriticalHitCheck(critChance, critMult);
         }
         else
         {
             return 0;
         }
     }
-    public int HeavyAttack(int minHit, int maxHit, int hitChance)
+    public int HeavyAttack(int minHit, int maxHit, int hitChance, int critChance)
     {
         if (Random.Shared.Next(1, 100) <= hitChance / 2)
         {
-            return Random.Shared.Next(minHit, maxHit + 1) * 2;
+            return Random.Shared.Next(minHit, maxHit + 1) * 2*CriticalHitCheck(critChance, critMult);
         }
         else
         {
             return 0;
         }
     }
-    
+
+    public int CriticalHitCheck(int critChance, int critMult)
+    {
+        if (Random.Shared.Next(1, 101) <= critChance)
+        {
+            return critMult;
+        }
+        else
+        { 
+            return 1;
+        }
+    }
 }
