@@ -2,7 +2,7 @@
 Character e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, critChance=0, heavyAttackChance=20,critMult=2 , name="Bob"};
 Character e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, critChance=0, heavyAttackChance=20,critMult=2 , name = "David"};
 Character e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=10, heavyAttackChance=20,critMult=2 , name = "John"};
-Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=0, heavyAttackChance=20,critMult=2 , name = "" };
+Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=0,critMult=2 , name = "" };
 List<Character> list = [e1, e2, e3]; 
 static string Keytest()
 {
@@ -153,11 +153,21 @@ Print($"Your enemy is {e.name}", 200);
                 }
             }
         }
-        int enemyDMG = e.Attack(e.minHit,e.maxHit,e.hitChance,e.critChance);
-        playerHP -= enemyDMG;
-        Print($"{e.name} dealt {enemyDMG} damage to you", 100);
-        Print($"{e.name}'s HP is {enemyHP}", 150);
-        Print($"{p1.name}'s HP is {playerHP}", 150);
+        int enemyDMG;
+        if (Random.Shared.Next(1, 101) <= e.heavyAttackChance)
+        {
+            enemyDMG = e.HeavyAttack(e.minHit, e.maxHit, e.hitChance, e.critChance);
+            playerHP -= enemyDMG;
+            Print($"{e.name} dealt {enemyDMG} damage to you using their heavy attack!", 100);
+        }
+        else
+        {
+            enemyDMG = e.Attack(e.minHit, e.maxHit, e.hitChance, e.critChance);
+            playerHP -= enemyDMG;
+            Print($"{e.name} dealt {enemyDMG} damage to you", 100);
+        }
+            Print($"{e.name}'s HP is {enemyHP}", 150);
+            Print($"{p1.name}'s HP is {playerHP}", 150);
     }
     if (enemyHP <= 0 && playerHP >= 0)
     {
