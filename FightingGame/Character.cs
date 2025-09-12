@@ -1,6 +1,5 @@
 using System;
 namespace FightingGame;
-
 public class Character
 {
     public int HP;
@@ -11,12 +10,11 @@ public class Character
     public int heavyAttackChance;
     public int critMult;
     public string name;
-    public int Attack(int minHit, int maxHit, int hitChance, int critChance)
+    public int Attack(int minHit, int maxHit, int hitChance, int critChance, int critMult)
     {
         int random = Random.Shared.Next(1, 100);
         if (random <= hitChance)
         {
-            Console.WriteLine(random);
             return Random.Shared.Next(minHit, maxHit + 1) * CriticalHitCheck(critChance, critMult);
         }
         else
@@ -24,7 +22,7 @@ public class Character
             return 0;
         }
     }
-    public int HeavyAttack(int minHit, int maxHit, int hitChance, int critChance)
+    public int HeavyAttack(int minHit, int maxHit, int hitChance, int critChance, int critMult)
     {
         if (Random.Shared.Next(1, 100) <= hitChance / 2)
         {
@@ -40,10 +38,11 @@ public class Character
     {
         if (Random.Shared.Next(1, 101) <= critChance)
         {
+            Console.WriteLine("Critical Hit!");
             return critMult;
         }
         else
-        { 
+        {
             return 1;
         }
     }

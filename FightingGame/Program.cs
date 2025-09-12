@@ -1,8 +1,47 @@
 ﻿using FightingGame;
-Character e1 = new() {hitChance = 50, minHit = 1, maxHit = 4, HP = 30, critChance=0, heavyAttackChance=20,critMult=2 , name="Bob"};
-Character e2 = new() {hitChance = 75, minHit = 2, maxHit = 3, HP = 20, critChance=0, heavyAttackChance=20,critMult=2 , name = "David"};
-Character e3 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=10, heavyAttackChance=20,critMult=2 , name = "John"};
-Character p1 = new() {hitChance = 50, minHit = 1, maxHit = 6, HP = 20, critChance=0,critMult=2 , name = "" };
+Character e1 = new()
+{
+    hitChance = 50,
+    minHit = 1,
+    maxHit = 4,
+    HP = 30,
+    critChance = 0,
+    heavyAttackChance = 20,
+    critMult = 2,
+    name = "Bob"
+};
+Character e2 = new()
+{
+    hitChance = 75,
+    minHit = 2,
+    maxHit = 3,
+    HP = 20,
+    critChance = 0,
+    heavyAttackChance = 20,
+    critMult = 2,
+    name = "David"
+};
+Character e3 = new()
+{
+    hitChance = 50,
+    minHit = 1,
+    maxHit = 6,
+    HP = 20,
+    critChance = 10,
+    heavyAttackChance = 20,
+    critMult = 2,
+    name = "John"
+};
+Character p1 = new()
+{
+    hitChance = 50,
+    minHit = 1,
+    maxHit = 6,
+    HP = 20,
+    critChance = 0,
+    critMult = 2,
+    name = ""
+};
 List<Character> list = [e1, e2, e3]; 
 static string Keytest()
 {
@@ -181,7 +220,7 @@ while (playing)
             combatChoice = Keytest();
             if (combatChoice == "1")
             {
-                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance);
+                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
                 if (dmg != 0)
                 {
                     Print($"You dealt {dmg} damage to {e.name}.", 250);
@@ -194,7 +233,7 @@ while (playing)
             }
             else if (combatChoice == "2")
             {
-                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance);
+                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
                 enemyHP -= dmg;
                 if (dmg != 0)
                 {
@@ -209,13 +248,13 @@ while (playing)
         int enemyDMG;
         if (Random.Shared.Next(1, 101) <= e.heavyAttackChance)
         {
-            enemyDMG = e.HeavyAttack(e.minHit, e.maxHit, e.hitChance, e.critChance);
+            enemyDMG = e.HeavyAttack(e.minHit, e.maxHit, e.hitChance, e.critChance, e.critMult);
             playerHP -= enemyDMG;
             Print($"{e.name} dealt {enemyDMG} damage to you using their heavy attack!", 100);
         }
         else
         {
-            enemyDMG = e.Attack(e.minHit, e.maxHit, e.hitChance, e.critChance);
+            enemyDMG = e.Attack(e.minHit, e.maxHit, e.hitChance, e.critChance, e.critMult);
             playerHP -= enemyDMG;
             Print($"{e.name} dealt {enemyDMG} damage to you", 100);
         }
