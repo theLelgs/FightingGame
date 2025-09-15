@@ -113,16 +113,19 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
             else if (confirm == "1" && StatPoints >= Cost)
             {
                 Print($"Increased {StatName} by {IncreaseAmount}", 200);
+                Keytest();
                 return (IncreaseAmount, Cost);
             }
             else if (confirm == "1" && StatPoints < Cost || confirm == "2" && StatPoints < Cost * 5)
             {
                 Print("Not enough statpoints.", 100);
+                Keytest();
                 return (0, 0);
             }
             else if (confirm == "2" && StatPoints >= 5 * Cost && p1.minHit <= p1.maxHit - 5)
             {
                 Print($"Increased {StatName} by {IncreaseAmount * 5}", 200);
+                Keytest();
                 return (IncreaseAmount * 5, Cost * 5);
             }
             else if (confirm == "2" && StatPoints>=5*Cost&&p1.maxHit>p1.minHit&&p1.minHit>p1.maxHit-5)
@@ -141,7 +144,6 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
                 else
                 {
                     Print($"Increased {StatName} by {p1.maxHit - p1.minHit}\nMinimum hit could not be increased past maximum hit", 300);
-
                     return (p1.maxHit - p1.minHit, Cost * (p1.maxHit - p1.minHit));
                 }
             }
@@ -214,6 +216,7 @@ while (playing)
                     statsDone = true;
                 }
             }
+            Keytest();
             Console.Clear();
         }
     }
