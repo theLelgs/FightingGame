@@ -288,13 +288,19 @@ while (playing)
         Print("It's a draw!", 300);
     }
     Print("Play again?\n1. Yes\n2. No", 300);
-    if (Keytest() != "1")
+    List<string> keylist1= ["1", "2"];
+    string input1 = "";
+    while (keylist1.Contains(input1) == false)
     {
-        playing = false;
-    }
-    else
-    {
-        statpoints += 3;
-        Print("You got 3 statpoints!", 100);
+        input1 = Keytest();
+        if (input1 == "1")
+        {
+            statpoints += 3;
+            Print("You got 3 statpoints!", 100);
+        }
+        else if (input1=="2")
+        {
+            playing = false;
+        }
     }
 }
