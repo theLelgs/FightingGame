@@ -26,7 +26,7 @@ public class Character
     {
         if (Random.Shared.Next(1, 100) <= hitChance / 2)
         {
-            return Random.Shared.Next(minHit, maxHit + 1) * 2*CriticalHitCheck(critChance, critMult);
+            return Random.Shared.Next(minHit, maxHit + 1) * 2 * CriticalHitCheck(critChance, critMult);
         }
         else
         {

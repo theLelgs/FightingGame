@@ -85,30 +85,35 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
             if (confirm == "1" && StatPoints >= Cost)
             {
                 Print($"Increased {StatName} by {IncreaseAmount}", 200);
+                Keytest();
                 return (IncreaseAmount, Cost);
             }
             else if (confirm == "1" && StatPoints < Cost || confirm == "2" && StatPoints < Cost * 5)
             {
                 Print("Not enough statpoints.", 100);
+                Keytest();
                 return (0, 0);
             }
             else if (confirm == "2" && StatPoints >= 5 * Cost)
             {
                 Print($"Increased {StatName} by {IncreaseAmount * 5}", 200);
+                Keytest();
                 return (IncreaseAmount * 5, Cost * 5);
             }
             else if (confirm == "3")
             {
                 int buyCount = StatPoints / Cost;
                 Print($"Increased {StatName} by {buyCount * IncreaseAmount}", 200);
+                Keytest();
                 return (IncreaseAmount * buyCount, Cost * buyCount);
             }
         }
         else
         {
-            if (p1.minHit >= p1.maxHit)
+            if (p1.minHit >= p1.maxHit && confirm != "4")
             {
                 Print("Minimum hit cannot be increased above the maximum hit", 200);
+                Keytest();
             }
             else if (confirm == "1" && StatPoints >= Cost)
             {
@@ -128,10 +133,11 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
                 Keytest();
                 return (IncreaseAmount * 5, Cost * 5);
             }
-            else if (confirm == "2" && StatPoints>=5*Cost&&p1.maxHit>p1.minHit&&p1.minHit>p1.maxHit-5)
+            else if (confirm == "2" && StatPoints >= 5 * Cost && p1.maxHit > p1.minHit && p1.minHit > p1.maxHit - 5)
             {
-                    Print($"Increased {StatName} by {p1.maxHit - p1.minHit}\nMinimum hit could not be increased past maximum hit", 300);
-                    return (p1.maxHit - p1.minHit, Cost * (p1.maxHit - p1.minHit));
+                Print($"Increased {StatName} by {p1.maxHit - p1.minHit}\nMinimum hit could not be increased past maximum hit", 300);
+                Keytest();
+                return (p1.maxHit - p1.minHit, Cost * (p1.maxHit - p1.minHit));
             }
             else if (confirm == "3")
             {
@@ -139,11 +145,13 @@ static (int, int) StatChange(int Cost, int BaseStat, int IncreaseAmount, int Sta
                 if (p1.minHit <= p1.maxHit - buyCount)
                 {
                     Print($"Increased {StatName} by {buyCount}", 200);
+                    Keytest();
                     return (buyCount, Cost * buyCount);
                 }
                 else
                 {
                     Print($"Increased {StatName} by {p1.maxHit - p1.minHit}\nMinimum hit could not be increased past maximum hit", 300);
+                    Keytest();
                     return (p1.maxHit - p1.minHit, Cost * (p1.maxHit - p1.minHit));
                 }
             }
@@ -209,14 +217,13 @@ while (playing)
                 {
                     Console.Clear();
                     Print($"Name: {p1.name}\nMax HP: {p1.HP}\nMinimum Hit: {p1.minHit}\nMaximum Hit: {p1.maxHit}\nHit Chance: {p1.hitChance}\nCritical Hit Chance: {p1.critChance}\nCritical Multiplier: {p1.critMult}", 1000);
-                    Keytest();
                 }
                 if (key == "7" || statpoints == 0)
                 {
                     statsDone = true;
                 }
             }
-            Keytest();
+
             Console.Clear();
         }
     }
