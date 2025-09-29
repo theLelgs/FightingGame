@@ -1,4 +1,5 @@
-﻿using FightingGame;
+﻿using System.IO;
+using FightingGame;
 Character e1 = new()
 {
     hitChance = 50,
@@ -229,8 +230,8 @@ while (playing)
     }
     int enemyHP = e.HP;
     int playerHP = p1.HP;
-            Print("Fight starts!", 150); 
-    
+    Print("Fight starts!", 150);
+
     while (playerHP > 0 && enemyHP > 0)
     {
         Print("What do you do?\n1. Normal attack\n2. Heavy attack", 150);
@@ -238,34 +239,34 @@ while (playing)
         while (combatChoice != "1" && combatChoice != "2")
         {
             combatChoice = Keytest();
-            if (combatChoice=="1"||combatChoice=="2")
-            {Console.Clear();}
+            if (combatChoice == "1" || combatChoice == "2")
+            { Console.Clear(); }
             if (combatChoice == "1")
+            {
+                int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
+                if (dmg != 0)
                 {
-                    int dmg = p1.Attack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
-                    if (dmg != 0)
-                    {
-                        Print($"You dealt {dmg} damage to {e.name}.", 250);
-                        enemyHP -= dmg;
-                    }
-                    else
-                    {
-                        Print($"You missed your normal attack on {e.name}", 250);
-                    }
-                }
-                else if (combatChoice == "2")
-                {
-                    int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
+                    Print($"You dealt {dmg} damage to {e.name}.", 250);
                     enemyHP -= dmg;
-                    if (dmg != 0)
-                    {
-                        Print($"You dealt {dmg} damage to {e.name} using the heavy attack!", 250);
-                    }
-                    else
-                    {
-                        Print($"You missed your heavy attack on {e.name}", 250);
-                    }
                 }
+                else
+                {
+                    Print($"You missed your normal attack on {e.name}", 250);
+                }
+            }
+            else if (combatChoice == "2")
+            {
+                int dmg = p1.HeavyAttack(p1.minHit, p1.maxHit, p1.hitChance, p1.critChance, p1.critMult);
+                enemyHP -= dmg;
+                if (dmg != 0)
+                {
+                    Print($"You dealt {dmg} damage to {e.name} using the heavy attack!", 250);
+                }
+                else
+                {
+                    Print($"You missed your heavy attack on {e.name}", 250);
+                }
+            }
         }
         int enemyDMG;
         if (Random.Shared.Next(1, 101) <= e.heavyAttackChance)
@@ -295,19 +296,21 @@ while (playing)
         Print("It's a draw!", 300);
     }
     Print("Play again?\n1. Yes\n2. No", 300);
-    List<string> keylist1= ["1", "2"];
+    List<string> keylist1 = ["1", "2"];
     string input1 = "";
     while (keylist1.Contains(input1) == false)
-    {
+    {   
         input1 = Keytest();
         if (input1 == "1")
         {
             statpoints += 3;
             Print("You got 3 statpoints!", 100);
         }
-        else if (input1=="2")
+        else if (input1 == "2")
         {
             playing = false;
         }
     }
 }
+
+Console.ReadLine();
